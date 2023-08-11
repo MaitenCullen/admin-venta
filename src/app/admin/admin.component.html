@@ -1,0 +1,72 @@
+<div class="container">
+  <h2>Admin</h2>
+
+  <div class="mb-3">
+    <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Buscar" (keyup)="filterItems()">
+  </div>
+
+  <button class="btn btn-primary" (click)="openModal(createItemModal)">Crear</button>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of pagedItems; let i = index">
+        <td>{{ item.id }}</td>
+        <td>{{ item.name }}</td>
+        <td>
+          <button class="btn btn-link" (click)="openModal(viewItemModal, {item: item})">Ver</button>
+          <button class="btn btn-link" (click)="openModal(editItemModal, {item: item})">Editar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+</div>
+
+<!-- Modales -->
+<ng-template #createItemModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Crear Elemento</h4>
+    <button type="button" class="close" aria-label="Cerrar" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- Formulario de creación -->
+  </div>
+</ng-template>
+
+<ng-template #viewItemModal let-modal="modal" let-data="data">
+  <div class="modal-header">
+    <h4 class="modal-title">Ver Elemento</h4>
+    <button type="button" class="close" aria-label="Cerrar" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- Detalles del elemento -->
+    <p>ID: {{ data.item.id }}</p>
+    <p>Nombre: {{ data.item.name }}</p>
+  </div>
+</ng-template>
+
+<ng-template #editItemModal let-modal="modal" let-data="data">
+  <div class="modal-header">
+    <h4 class="modal-title">Editar Elemento</h4>
+    <button type="button" class="close" aria-label="Cerrar" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- Formulario de edición -->
+    <p>ID: {{ data.item.id }}</p>
+    <p>Nombre: {{ data.item.name }}</p>
+  </div>
+</ng-template>
