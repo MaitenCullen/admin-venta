@@ -1,72 +1,116 @@
-<div class="container">
-  <h2>Admin</h2>
+<section class="d-flex justify-content-between">
+  <aside class="bg-dark-subtle">
+    <div>
+      <a href="">Acción 1</a>
+      <a href="">Acción 2</a>
+      <a href="">Acción 3</a>
+    </div>
+  </aside>
+  <div class="w-100">
+    <div class="d-flex justify-content-end">
+      <input type="search" id="buscar" name="buscar" placeholder="Buscar">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Crear
+      </button>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Nuevo Producto</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form #newProductForm="ngForm">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="nuevoProducto.nombre" required>
+                </div>
+                <div class="mb-3">
+                  <label for="codigo" class="form-label">Código</label>
+                  <input type="text" class="form-control" id="codigo" name="codigo" [(ngModel)]="nuevoProducto.codigo" required>
+                </div>
+                <div class="mb-3">
+                  <label for="precio" class="form-label">Precio</label>
+                  <input type="number" class="form-control" id="precio" name="precio" [(ngModel)]="nuevoProducto.precio" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary" (click)="crear()" [disabled]="!newProductForm.form.valid">Guardar cambios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Producto</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Precio</th>
+        </tr>
+      </thead>
+      <tbody id="tabla"*ngFor="let producto of itemProducts">
+        <tr>
+          <td scope="row" >{{producto.id}}</td>
+          <td>{{producto.nombre}} </td>
+          <td>{{producto.codigo}} </td>
+          <td>{{producto.precio}} </td>
+          <td>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Ver
+          </button>
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">{{producto.nombre}}</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                 {{producto.codigo}}
+                 {{producto.precio}}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cerrar</button>
+                  <button type="button" class="btn btn-primary">Editar</button>
+                </div>
+              </div>
+            </div>
+          </div></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-around">
+      <div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" (click)="obtener()">
+            Obtener
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Separated link</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="navigation-container">
+        <div aria-label="Page navigation ">
+          <ul class="pagination d-flex justify-content-evenly">
+            <li class="page-item li-hover" *ngFor="let pagina of totalidad" (click)="cambioPagina(pagina)"> {{pagina}} </li>
+          </ul>
+        </div>
+      </div>
 
-  <div class="mb-3">
-    <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Buscar" (keyup)="filterItems()">
+    </div>
   </div>
+</section>
 
-  <button class="btn btn-primary" (click)="openModal(createItemModal)">Crear</button>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of pagedItems; let i = index">
-        <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
-        <td>
-          <button class="btn btn-link" (click)="openModal(viewItemModal, {item: item})">Ver</button>
-          <button class="btn btn-link" (click)="openModal(editItemModal, {item: item})">Editar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
-</div>
-
-<!-- Modales -->
-<ng-template #createItemModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Crear Elemento</h4>
-    <button type="button" class="close" aria-label="Cerrar" (click)="modal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- Formulario de creación -->
-  </div>
-</ng-template>
-
-<ng-template #viewItemModal let-modal="modal" let-data="data">
-  <div class="modal-header">
-    <h4 class="modal-title">Ver Elemento</h4>
-    <button type="button" class="close" aria-label="Cerrar" (click)="modal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- Detalles del elemento -->
-    <p>ID: {{ data.item.id }}</p>
-    <p>Nombre: {{ data.item.name }}</p>
-  </div>
-</ng-template>
-
-<ng-template #editItemModal let-modal="modal" let-data="data">
-  <div class="modal-header">
-    <h4 class="modal-title">Editar Elemento</h4>
-    <button type="button" class="close" aria-label="Cerrar" (click)="modal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- Formulario de edición -->
-    <p>ID: {{ data.item.id }}</p>
-    <p>Nombre: {{ data.item.name }}</p>
-  </div>
-</ng-template>

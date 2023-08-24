@@ -7,19 +7,22 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { AdminComponent } from './admin/admin.component'; // 
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ComponentsModule } from './components/components.module';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    AdminComponent
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
     NgbModule,
     AppRoutingModule,
     FormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    ComponentsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

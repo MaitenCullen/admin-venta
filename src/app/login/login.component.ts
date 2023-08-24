@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LoginService } from '../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -6,16 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
+  username: string = ''; 
+  password: string = ''; 
+  constructor(private loginService: LoginService) {}
 
-  onSubmit() {
-    // Aquí realizarías la llamada AJAX utilizando el servicio HttpClient
-    // para enviar el username y password a tu API y obtener el token de acceso.
-    // Luego guardarías el token en el local storage.
-
-    // Ejemplo de cómo podrías guardar el token en el local storage:
-    const token = 'your_generated_token';
-    localStorage.setItem('access_token', token);
+  onSubmit(): void {
+    this.loginService.login(this.username, this.password)
+      .then(() => {
+       console.log(this.username, this.password, "los datos")
+      });
   }
 }

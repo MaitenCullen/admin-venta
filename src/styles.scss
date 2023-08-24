@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+
+
+$color-text: #000000;
+$color-link: #b13800;
+
+.navigation-container{
+   width: 20%;
+}
+
+.li-hover{
+    color: $color-link;
+    font-weight: bolder;
+  &:hover{
+    cursor: pointer;
+  }
+}

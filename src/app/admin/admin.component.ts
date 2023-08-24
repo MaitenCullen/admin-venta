@@ -1,46 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ProductsService } from '../services/products.service';
+import { NewProductService } from '../services/new-product.service';
 
-class Item {
-  constructor(public id: number, public name: string) {}
+
+interface Item {
+  id: number,
+  nombre: string,
+  codigo:string,
+  precio:number
 }
+
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent {
-  items: Item[] = [
-    new Item(1, 'Item 1'),
-    new Item(2, 'Item 2'),
-    // ... otros elementos
-  ];
 
-  currentPage = 1;
-  itemsPerPage = 10;
-  searchText = '';
+export class AdminComponent implements OnInit {
+  ngOnInit(): void {
+    this.obtener()
+  }
+   itemProducts:Array<Item> = [];
+   nuevoProducto:Item = { id: 0, nombre: '', codigo: '', precio: 0 }
+   paginaActual = 1;
+   cantidadProductos = 5;
+   totalidadPaginas = 0;
+   constructor(private productsService: ProductsService, private crearProducto: NewProductService) {};
 
-  modalRef: NgbModalRef | undefined;
+  obtener(): any {
+    this.productsService.obtenerProducto(this.paginaActual, this.cantidadProductos)
+      .then((data) => {
+       console.log( data, "response")
+      this.itemProducts = data.data;
+      this.totalidadPaginas = data.pagination.totalPages;
+      }); 
+  }
 
-  constructor(private modalService: NgbModal) {}
+    cambioPagina(nuevaPagina:number){
+         this.paginaActual = nuevaPagina;
+        console.log( "la nueva pagina")
+        this.obtener();
+        console.log(this.paginaActual, "pagina actual")
+    }
 
-  openModal(template: any, data?: any) {
-    this.modalRef = this.modalService.open(template);
-    if (data) {
-      this.modalRef.componentInstance.data = data;
+    crear(): any {
+      this.crearProducto.crearProducto(this.nuevoProducto)
+        .then((data) => {
+          console.log(data, "response");
+          this.nuevoProducto = { id: 0, nombre: '', codigo: '', precio: 0 }; 
+          document.getElementById('exampleModal')?.classList.remove('show');
+          document.body.classList.remove('modal-open');
+        });
+    }
+    get totalidad(): number[] {
+   
+      return Array.from({ length: this.totalidadPaginas }, (_, i) => i + 1);
+
     }
   }
 
-  filterItems() {
-    // Implementa la lógica de filtrado según el valor de this.searchText
-  }
-
-  get pagedItems() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return this.items.slice(startIndex, endIndex);
-  }
-
-  // ... otras propiedades y métodos
-}
