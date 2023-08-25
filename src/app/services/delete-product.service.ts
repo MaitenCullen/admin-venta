@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class NewProductService {
-   url = 'https://interneg.ddns.net/api-challenge/productos'; 
+export class DeleteProductService {
+  url = 'https://interneg.ddns.net/api-challenge/productos/eliminar'; 
 
-  async createProduct(newProduct: any): Promise<any> {
+  async deleteProduct(productID: number): Promise<any> {
 
     const token = localStorage.getItem('access_token');
   
@@ -14,17 +14,21 @@ export class NewProductService {
       console.error('No se encontró un token en el localStorage.');
       return;
     }
-    const createProduct = {
+    const deleteOneProduct = {
       method: 'POST',
       headers: {'accept':'*/*',  'Content-Type': 'application/json', 'Authorization':token},
-      body: JSON.stringify(newProduct) 
     };
 
-    return fetch(this.url, createProduct)
+    const DeleteUrl = `${this.url}?id=${productID}`;
+ 
+    
+    return fetch(DeleteUrl, deleteOneProduct)
       .then(response => response.json())
+      .then(data => data)
       .catch(error => {
         console.error('Error', error);
       });
   }
+
   constructor() { }
 }

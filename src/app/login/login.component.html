@@ -4,15 +4,16 @@
       <h2>Login</h2>
       <form (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <label for="username">Username:</label>
+          <label for="username">Usuario:</label>
           <input type="text" class="form-control" id="username" [(ngModel)]="username" name="username">
         </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
+        <div class="form-group  py-2">
+          <label for="password" class="">Contraseña:</label>
           <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password">
         </div>
-        <button type="submit" class="btn btn-primary" (click)="onSubmit()">Login</button>
+        <button type="submit" class="btn btn-warning" (click)="onSubmit()" [routerLink]="['ABM']">Login</button>
       </form>
     </div>
   </div>
 </div>
+ 

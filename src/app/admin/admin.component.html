@@ -1,15 +1,14 @@
-<section class="d-flex justify-content-between">
-  <aside class="bg-dark-subtle">
-    <div>
-      <a href="">Acción 1</a>
-      <a href="">Acción 2</a>
-      <a href="">Acción 3</a>
+<section class="d-flex justify-content-between ">
+  <aside class="aside-container">
+    <div class="action-container">
+      <a href="">Inicio</a>
+      <a href="">Inicio</a>
+      <a href="">Inicio</a>
     </div>
   </aside>
   <div class="w-100">
     <div class="d-flex justify-content-end">
-      <input type="search" id="buscar" name="buscar" placeholder="Buscar">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Crear
       </button>
       
@@ -19,34 +18,36 @@
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Nuevo Producto</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close btn-warning" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form #newProductForm="ngForm">
+              <form #newProductForm="ngForm" class="needs-validation" novalidate>
                 <div class="mb-3">
-                  <label for="nombre" class="form-label">Nombre</label>
-                  <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="nuevoProducto.nombre" required>
+                  <label for="name" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="newProduct.nombre" required>
+                
                 </div>
                 <div class="mb-3">
-                  <label for="codigo" class="form-label">Código</label>
-                  <input type="text" class="form-control" id="codigo" name="codigo" [(ngModel)]="nuevoProducto.codigo" required>
+                  <label for="code" class="form-label">Descripción</label>
+                  <input type="text" class="form-control" id="codigo" name="codigo" [(ngModel)]="newProduct.codigo" required>
                 </div>
                 <div class="mb-3">
-                  <label for="precio" class="form-label">Precio</label>
-                  <input type="number" class="form-control" id="precio" name="precio" [(ngModel)]="nuevoProducto.precio" required>
+                  <label for="price" class="form-label">Precio</label>
+                  <input type="number" class="form-control" id="precio" name="precio" [(ngModel)]="newProduct.precio" required>
                 </div>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="button" class="btn btn-primary" (click)="crear()" [disabled]="!newProductForm.form.valid">Guardar cambios</button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-warning" (click)="create()" [disabled]="!newProductForm.form.valid" data-bs-dismiss="modal">Guardar cambios</button>
+
             </div>
           </div>
         </div>
       </div>
       
     </div>
-    <table class="table">
+    <table class="table h-50">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -55,61 +56,47 @@
           <th scope="col">Precio</th>
         </tr>
       </thead>
-      <tbody id="tabla"*ngFor="let producto of itemProducts">
+      <tbody id="tabla"*ngFor="let producto of itemProducts, let index = index">
         <tr>
           <td scope="row" >{{producto.id}}</td>
           <td>{{producto.nombre}} </td>
           <td>{{producto.codigo}} </td>
           <td>{{producto.precio}} </td>
           <td>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Ver
-          </button>
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">{{producto.nombre}}</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                 {{producto.codigo}}
-                 {{producto.precio}}
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cerrar</button>
-                  <button type="button" class="btn btn-primary">Editar</button>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" [attr.data-bs-target]="'#modal-' + index">
+              Ver
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" [id]="'modal-' + index" tabindex="-1" aria-labelledby="seeProductLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="seeProductLabel">{{producto.nombre}}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                  {{producto.codigo}}
+                  {{producto.precio}}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
+                    <button type="button" class="btn btn-warning" (click)="delete(producto.id)" data-bs-dismiss="modal">eliminar</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div></td>
+          </td>
         </tr>
       </tbody>
     </table>
     <div class="d-flex justify-content-around">
-      <div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" (click)="obtener()">
-            Obtener
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Separated link</a></li>
-          </ul>
-        </div>
-      </div>
       <div class="navigation-container">
         <div aria-label="Page navigation ">
           <ul class="pagination d-flex justify-content-evenly">
-            <li class="page-item li-hover" *ngFor="let pagina of totalidad" (click)="cambioPagina(pagina)"> {{pagina}} </li>
+            <li class="page-item li-hover" *ngFor="let page of totality" (click)="changePage(page)"> {{page}} </li>
           </ul>
         </div>
       </div>
-
     </div>
   </div>
 </section>

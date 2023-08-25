@@ -2,6 +2,7 @@ import { Component, OnInit  } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ProductsService } from '../services/products.service';
 import { NewProductService } from '../services/new-product.service';
+import { DeleteProductService } from '../services/delete-product.service';
 
 
 interface Item {
@@ -20,44 +21,56 @@ interface Item {
 
 export class AdminComponent implements OnInit {
   ngOnInit(): void {
-    this.obtener()
+    this.getProducts()
   }
-   itemProducts:Array<Item> = [];
-   nuevoProducto:Item = { id: 0, nombre: '', codigo: '', precio: 0 }
-   paginaActual = 1;
-   cantidadProductos = 5;
-   totalidadPaginas = 0;
-   constructor(private productsService: ProductsService, private crearProducto: NewProductService) {};
 
-  obtener(): any {
-    this.productsService.obtenerProducto(this.paginaActual, this.cantidadProductos)
+   itemProducts:Array<Item> = [];
+   newProduct:Item = { id: 0, nombre: '', codigo: '', precio: 0 }
+   currentPage = 1;
+   numberProducts = 5;
+   allPages = 0;
+   productID = 0;
+
+   constructor(private productsService: ProductsService, private createProduct: NewProductService, private deleteProduct: DeleteProductService) {};
+
+  getProducts(): any {
+    this.productsService.getProduct(this.currentPage, this.numberProducts)
       .then((data) => {
        console.log( data, "response")
       this.itemProducts = data.data;
-      this.totalidadPaginas = data.pagination.totalPages;
+      this.allPages = data.pagination.totalPages;
       }); 
   }
 
-    cambioPagina(nuevaPagina:number){
-         this.paginaActual = nuevaPagina;
+    changePage(newPage:number){
+         this.currentPage = newPage;
         console.log( "la nueva pagina")
-        this.obtener();
-        console.log(this.paginaActual, "pagina actual")
+        this.getProducts();
+        console.log(this.currentPage, "pagina actual")
     }
 
-    crear(): any {
-      this.crearProducto.crearProducto(this.nuevoProducto)
+    create(): any {
+      this.createProduct.createProduct(this.newProduct)
         .then((data) => {
           console.log(data, "response");
-          this.nuevoProducto = { id: 0, nombre: '', codigo: '', precio: 0 }; 
+          this.newProduct = { id: 0, nombre:'', codigo: '', precio: 0 }; 
           document.getElementById('exampleModal')?.classList.remove('show');
           document.body.classList.remove('modal-open');
         });
     }
-    get totalidad(): number[] {
+    get totality(): number[] {
    
-      return Array.from({ length: this.totalidadPaginas }, (_, i) => i + 1);
+      return Array.from({ length: this.allPages }, (_, i) => i + 1);
 
+    }
+    delete(selectedProductID:number):any{
+      this.productID = selectedProductID;
+      this.deleteProduct.deleteProduct(this.productID)
+      .then((data) => {
+        console.log( data, "eliminar")
+       this.productID = data.id;
+       this.getProducts()
+       }); 
     }
   }
 

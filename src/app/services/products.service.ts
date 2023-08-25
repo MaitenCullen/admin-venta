@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ProductsService {
-  private url = 'https://interneg.ddns.net/api-challenge/productos'; 
+  url = 'https://interneg.ddns.net/api-challenge/productos'; 
 
-  async obtenerProducto(pagina:number, cantidadProductos: number): Promise<any> {
+  async getProduct(page:number, numberProducts: number): Promise<any> {
 
     const token = localStorage.getItem('access_token');
   
@@ -19,9 +19,10 @@ export class ProductsService {
       headers: {'accept':'*/*',  'Content-Type': 'application/json', 'Authorization':token},
     };
 
-    const urlWithPagination = `${this.url}?productos?take=${cantidadProductos}&page=${pagina}`;
-
-    return fetch(urlWithPagination, requestProducts)
+    const urlPagination = `${this.url}?productos?take=${numberProducts}&page=${page}`;
+ 
+    
+    return fetch(urlPagination, requestProducts)
       .then(response => response.json())
       .then(data => data)
       .catch(error => {
